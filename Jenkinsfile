@@ -2,11 +2,7 @@ pipeline {
   agent any
 
   stages {
-    stage('Checkout') {
-  steps {
-    git 'https://github.com/ashwin-somesh/ms.git'
-  }
-}
+    
 
 
     stage('Build Docker Images') {
@@ -34,4 +30,5 @@ pipeline {
     }
   }
 }
+
 
