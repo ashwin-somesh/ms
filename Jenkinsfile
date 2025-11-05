@@ -16,17 +16,18 @@ pipeline {
       }
     }
 
-    stage('Push to DockerHub') {
-      steps {
-        withCredentials([string(credentialsId: 'dockerhub-pass', variable: 'PASS')]) {
-          sh """
-          echo $PASS | docker login -u ${DOCKERHUB_USER} --password-stdin
-          docker push ${DOCKERHUB_USER}/product-service:latest
-          docker push ${DOCKERHUB_USER}/order-service:latest
-          """
-        }
-      }
+   stage('Push to DockerHub') {
+  steps {
+    withCredentials([usernamePassword(credentialsId: 'dockerhub-pass', usernameVariable: 'DH_USER', passwordVariable: 'DH_PASS')]) {
+      sh """
+        echo \$DH_PASS | docker login -u \$DH_USER --password-stdin
+        docker push \$DH_USER/product-service:latest
+        docker push \$DH_USER/order-service:latest
+      """
     }
+  }
+}
+
 
     stage('Deploy') {
       steps {
@@ -38,4 +39,5 @@ pipeline {
     }
   }
 }
+
 
