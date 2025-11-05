@@ -3,10 +3,11 @@ pipeline {
 
   stages {
     stage('Checkout') {
-      steps {
-        git 'https://github.com/your/repo/microservices.git'
-      }
-    }
+  steps {
+    git 'https://github.com/ashwin-somesh/ms.git'
+  }
+}
+
 
     stage('Build Docker Images') {
       steps {
@@ -33,3 +34,4 @@ pipeline {
     }
   }
 }
+
