@@ -1,0 +1,11 @@
+version: '3'
+services:
+  product:
+    image: your-dockerhub/product-service:latest
+    ports:
+      - "8081:8081"
+
+  order:
+    image: your-dockerhub/order-service:latest
+    ports:
+      - "8082:8082"
