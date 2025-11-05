@@ -1,34 +1,40 @@
 pipeline {
   agent any
 
-  stages {
-    
+  environment {
+      DOCKERHUB_USER = "your-dockerhub-username"
+  }
 
+  stages {
 
     stage('Build Docker Images') {
       steps {
-        sh 'docker build -t your-dockerhub/product-service:latest product-service'
-        sh 'docker build -t your-dockerhub/order-service:latest order-service'
+        sh """
+        docker build -t ${DOCKERHUB_USER}/product-service:latest microservices/product-service
+        docker build -t ${DOCKERHUB_USER}/order-service:latest microservices/order-service
+        """
       }
     }
 
-    stage('Push Images') {
+    stage('Push to DockerHub') {
       steps {
         withCredentials([string(credentialsId: 'dockerhub-pass', variable: 'PASS')]) {
-          sh 'echo $PASS | docker login -u yourdockeruser --password-stdin'
+          sh """
+          echo $PASS | docker login -u ${DOCKERHUB_USER} --password-stdin
+          docker push ${DOCKERHUB_USER}/product-service:latest
+          docker push ${DOCKERHUB_USER}/order-service:latest
+          """
         }
-        sh 'docker push your-dockerhub/product-service:latest'
-        sh 'docker push your-dockerhub/order-service:latest'
       }
     }
 
     stage('Deploy') {
       steps {
-        sh 'docker compose down'
-        sh 'docker compose up -d'
+        sh """
+        docker compose down || true
+        docker compose up -d
+        """
       }
     }
   }
 }
-
-
